@@ -1,0 +1,21 @@
+[project]
+name = "comfyui"
+description = "ComfyUI"
+authors = [{name= "Chenglu", email = "chenglu.she@gmail.com"}]
+version = "1.0.0"
+readme = "README.md"
+
+[project.urls]
+Homepage = "https://github.com/louis-she/featurize-comfyui"
+Documentation = "https://github.com/louis-she/featurize-comfyui/blob/master/README.md"
+Repository = "https://github.com/louis-she/featurize-comfyui"
+Changelog = "https://github.com/louis-she/featurize-comfyui/blob/master/CHANGELOG.md"
+Issues = "https://github.com/louis-she/featurize-comfyui/issues"
+
+[featurize]
+port = "23810"
+op_port = "38965"
+icon = "https://featurize-public.oss-cn-beijing.aliyuncs.com/apps/comfyui.png"
+author_github = "https://github.com/louis-she"
+name = "ComfyUI"
+newtab = false

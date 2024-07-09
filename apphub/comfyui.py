@@ -72,7 +72,7 @@ ComfyUI
             # 的操作并不完备，对于大多数应用来说，可能都是支持云盘安装的，但是也有一些应用
             # 需要用到很高级的文件系统操作（例如一部分文件锁），allow_work 默认为 False
             # 如果开发者发现安装在云盘没有问题，则这里可以将 allow_work 设置为 True
-            install_location = self.render_install_location(allow_work=False)
+            install_location = self.render_install_location(allow_work=True)
 
             # TODO: 这里根据配置项，开发者自行选择渲染其他的 Gradio 组建 
             # ....
@@ -84,7 +84,6 @@ ComfyUI
             # 渲染日志组件，将安装过程展示给用户
             self.render_log()
         return demo
-
     def installation(self, install_location):
         """该函数会在用户点击安装按钮后被触发（前提是用了 self.render_isntallation_button，开
         发者也可以完全自己发挥），用于执行安装的逻辑，比如下载源码、安装依赖等，其参数和
@@ -94,6 +93,8 @@ ComfyUI
         # NOTE：installation 的参数和这里都不要用 *args 的方式传参
         super().installation(install_location)
 
+        if self.in_work:
+            self.execute_command("conda create -y --prefix /home/featurize/work/ComfyUI python=3.9")
         with self.conda_activate("base"):
             self.execute_command("git clone https://github.com/comfyanonymous/ComfyUI")
             self.execute_command("pip install -r requirements.txt", "ComfyUI")

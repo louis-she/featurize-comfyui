@@ -93,9 +93,13 @@ ComfyUI
         # NOTE：installation 的参数和这里都不要用 *args 的方式传参
         super().installation(install_location)
 
+
         if self.in_work:
-            self.execute_command("conda create -y --prefix /home/featurize/work/ComfyUI python=3.9")
-        with self.conda_activate("base"):
+            self.execute_command(f"conda create -y --prefix /home/featurize/work/app/{self.key}/env python=3.9")
+    
+        env_name = "base" if not self.in_work else f"/home/featurize/work/app/{self.key}/env"
+
+        with self.conda_activate(env_name):
             self.execute_command("git clone https://github.com/comfyanonymous/ComfyUI")
             self.execute_command("pip install -r requirements.txt", "ComfyUI")
 

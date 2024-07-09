@@ -97,9 +97,7 @@ ComfyUI
         if self.in_work:
             self.execute_command(f"conda create -y --prefix /home/featurize/work/app/{self.key}/env python=3.9")
     
-        env_name = "base" if not self.in_work else f"/home/featurize/work/app/{self.key}/env"
-
-        with self.conda_activate(env_name):
+        with self.conda_activate(self.env_name):
             self.execute_command("git clone https://github.com/comfyanonymous/ComfyUI")
             self.execute_command("pip install -r requirements.txt", "ComfyUI")
 
@@ -113,6 +111,10 @@ ComfyUI
         # 调用 app_installed，标准流程，该函数会通知前端安装已经完成，切换到应用的页面
         self.app_installed()
 
+    @property
+    def env_name(self):
+        return "base" if not self.in_work else f"/home/featurize/work/app/{self.key}/env"
+
     def start(self):
         """安装完成后，应用并不会立即开始运行，而是调用这个 start 函数。"""
 
@@ -122,7 +124,7 @@ ComfyUI
         # 卡住不动，self.execute_command("uvicorn app:main", daemon=True)
         # TODO: 写应用启动的逻辑
 
-        with self.conda_activate("base"):
+        with self.conda_activate(self.env_name):
             self.execute_command(f"python main.py --listen 0.0.0.0 --port {self.port}", "ComfyUI", daemon=True)
 
         # 调用 app_started，标准流程，该函数会通知前端应用已经开始运行

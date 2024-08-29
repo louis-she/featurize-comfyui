@@ -53,7 +53,11 @@ class Comfyui(App):
             gr.Markdown(
                 """# 安装 ComfyUI
 
-ComfyUI
+若选择安装在云盘，并且安装所有插件，大约需要 7GB 空间，整个安装过程大概持续 10 分钟。
+
+如果安装在云盘，退还实例后下次无需重复安装。
+
+我们准备了大概 200GB 的各种模型文件，可以在启动应用的时候选择挂载，挂载模型文件并不会占用云盘空间。
 """
             )
             # 应用安装的位置，支持两个选项，云盘或数据盘
@@ -73,10 +77,10 @@ ComfyUI
             # 的操作并不完备，对于大多数应用来说，可能都是支持云盘安装的，但是也有一些应用
             # 需要用到很高级的文件系统操作（例如一部分文件锁），allow_work 默认为 False
             # 如果开发者发现安装在云盘没有问题，则这里可以将 allow_work 设置为 True
-            install_location = self.render_install_location(allow_work=True, default="work")
-
-            # TODO: 这里根据配置项，开发者自行选择渲染其他的 Gradio 组建 
-            # ....
+            install_location = self.render_install_location(
+                allow_work=True,
+                default="work",
+            )
 
             install_extension = gr.Dropdown(
                 label="安装常用插件",

@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import gradio as gr
 
@@ -77,14 +78,26 @@ ComfyUI
             # TODO: 这里根据配置项，开发者自行选择渲染其他的 Gradio 组建 
             # ....
 
+            install_extension = gr.Dropdown(
+                label="安装常用插件",
+                info="安装常用的模型或插件",
+                allow_custom_value=False,
+                value="v1",
+                choices=[
+                    ("纯净版（仅 comfyui 本身）", "bare"),
+                    ("常用插件", "v1"),
+                ]
+            )
+
             # 这里使用一个帮助方法来渲染提交按钮，注意 inputs 的参数
             self.render_installation_button(
-                inputs=[install_location]
+                inputs=[install_location, install_extension]
             )
             # 渲染日志组件，将安装过程展示给用户
             self.render_log()
         return demo
-    def installation(self, install_location):
+
+    def installation(self, install_location, install_extension):
         """该函数会在用户点击安装按钮后被触发（前提是用了 self.render_isntallation_button，开
         发者也可以完全自己发挥），用于执行安装的逻辑，比如下载源码、安装依赖等，其参数和
         self.render_installation_button 中的 inputs 保持一致。
@@ -93,13 +106,15 @@ ComfyUI
         # NOTE：installation 的参数和这里都不要用 *args 的方式传参
         super().installation(install_location)
 
-
         if self.in_work:
             self.execute_command(f"conda create -y --prefix /home/featurize/work/app/{self.key}/env python=3.9")
     
         with self.conda_activate(self.env_name):
             self.execute_command("git clone https://github.com/comfyanonymous/ComfyUI")
             self.execute_command("pip install -r requirements.txt", "ComfyUI")
+        
+        if install_extension == "v1":
+            self.execute_command(f"featurize dataset extract bf2877db-408d-4a3f-856d-3d718c027b27 ./ComfyUI/custom_nodes/")
 
         # 通常在安装过程中都会运行大量的 bash 命令，强烈建议使用 `self.execute_command` 来运行
         # 更稳妥的办法这里可能最好先创建一个虚拟环境，或者可以做得更好，把是否创建虚拟环境加到配置项
@@ -115,7 +130,32 @@ ComfyUI
     def env_name(self):
         return "base" if not self.in_work else f"/home/featurize/work/app/{self.key}/env"
 
-    def start(self):
+    def render_start_page(self):
+        with gr.Blocks() as demo:
+            gr.Markdown(
+                f"""# {self.name} 尚未启动
+
+请点击下方按钮启动 {self.name}。
+
+当前 ComfyUI 被安装在 {os.path.join(self.cfg.install_location, "ComfyUI")} 中，你可以使用下方的「文件」应用访问这个目录手动管理文件。
+
+如果使用遇到问题，请及时关注公众号后向我们反馈：https://docs.featurize.cn 中可扫码联系我们。
+"""
+            )
+            mount_models = gr.Dropdown(
+                label="挂载模型（不占用云端硬盘空间）",
+                info="我们会定期更新常用的挂载模型内容，如果你有其他建议，也欢迎向我们反馈。",
+                value="v1",
+                choices=[
+                    ("挂载常用模型", "v1"),
+                    ("不挂载", "bare"),
+                ]
+            )
+            button = self.render_start_button(inputs=[mount_models])
+            self.render_log()
+        return demo
+
+    def start(self, mount_models):
         """安装完成后，应用并不会立即开始运行，而是调用这个 start 函数。"""
 
         # 跟安装逻辑一样，start 里一般来说也是使用 execute_command 来启用应用
@@ -123,6 +163,22 @@ ComfyUI
         # 则在调用 execute_command 时候需要传入 daemon=True，否则命令会
         # 卡住不动，self.execute_command("uvicorn app:main", daemon=True)
         # TODO: 写应用启动的逻辑
+        if mount_models != "bare":
+            self.execute_command(
+                f"sudo mount -t nfs -o ro,acregmin=600,acregmax=3600,rsize=1048576,wsize=1048576,noatime,tcp 172.16.0.227:/featurize-public/comfyui/assets_{mount_models} /home/featurize/.public/comfyui"
+            )
+            model_path = "/home/featurize/.public/comfyui/models/"
+            for model_type in os.listdir(model_path):
+                for file in os.listdir(f"{model_path}{model_type}"):
+                    target = os.path.join(self.cfg.install_location, "ComfyUI/models", model_type, file)
+                    if not os.path.exists(target):
+                        src = os.path.join(model_path, model_type, file)
+                        Path(target).parent.mkdir(parents=True, exist_ok=True)
+                        self.logger.info(f"link {src} to {target}")
+                        if os.path.isdir(src):
+                            os.symlink(src, target, target_is_directory=True)
+                        else:
+                            os.symlink(src, target)
 
         with self.conda_activate(self.env_name):
             self.execute_command(f"python main.py --listen 0.0.0.0 --port {self.port}", "ComfyUI", daemon=True)

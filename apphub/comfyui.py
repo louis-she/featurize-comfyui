@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from apphub.helper import wait_for_port
 
 import gradio as gr
 
@@ -116,6 +117,10 @@ class Comfyui(App):
         with self.conda_activate(self.env_name):
             self.execute_command("git clone https://github.com/comfyanonymous/ComfyUI")
             self.execute_command("pip install -r requirements.txt", "ComfyUI")
+            self.execute_command("pip install facexlib opencv-python timm accelerate "
+                                 "deepdiff matplotlib google diffusers omegaconf supervision "
+                                 "numexpr blend-modes bitsandbytes vtracer rembg openai "
+                                 "surrealist lpips numba")
         
         if install_extension == "v1":
             self.execute_command(f"featurize dataset extract bf2877db-408d-4a3f-856d-3d718c027b27 ./ComfyUI/custom_nodes/")
@@ -128,6 +133,11 @@ class Comfyui(App):
         # NOTE：所有命令，或是其他的根路径相关的参数等都建议使用绝对路径
         # TODO：在这里写安装逻辑，一般都会调用 execute_command 来执行
         # self.execute_command("{command to be executed}")
+
+        # 因为起应用还会根据安装的扩展来安装其他的包，所以这里直接启动应用，等端口通了之后，Kill 应用，再通知前端启动成功
+        self.execute_command(f"python main.py --listen 127.0.0.1 --port {self.port}", "ComfyUI", daemon=True)
+        wait_for_port(self.port)
+        self.close()
 
         # 调用 app_installed，标准流程，该函数会通知前端安装已经完成，切换到应用的页面
         self.app_installed()

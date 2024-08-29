@@ -112,7 +112,7 @@ class Comfyui(App):
         super().installation(install_location)
 
         if self.in_work:
-            self.execute_command(f"conda create -y --prefix /home/featurize/work/app/{self.key}/env python=3.9")
+            self.execute_command(f"conda create -y --prefix /home/featurize/work/app/{self.key}/env python=3.11")
     
         with self.conda_activate(self.env_name):
             self.execute_command("git clone https://github.com/comfyanonymous/ComfyUI")
@@ -120,7 +120,7 @@ class Comfyui(App):
             self.execute_command("pip install facexlib opencv-python timm accelerate "
                                  "deepdiff matplotlib google diffusers omegaconf supervision "
                                  "numexpr blend-modes bitsandbytes vtracer rembg openai "
-                                 "surrealist lpips numba")
+                                 "surrealist lpips numba einops")
         
         if install_extension == "v1":
             self.execute_command(f"featurize dataset extract bf2877db-408d-4a3f-856d-3d718c027b27 ./ComfyUI/custom_nodes/")

@@ -73,7 +73,7 @@ ComfyUI
             # 的操作并不完备，对于大多数应用来说，可能都是支持云盘安装的，但是也有一些应用
             # 需要用到很高级的文件系统操作（例如一部分文件锁），allow_work 默认为 False
             # 如果开发者发现安装在云盘没有问题，则这里可以将 allow_work 设置为 True
-            install_location = self.render_install_location(allow_work=True)
+            install_location = self.render_install_location(allow_work=True, default="work")
 
             # TODO: 这里根据配置项，开发者自行选择渲染其他的 Gradio 组建 
             # ....

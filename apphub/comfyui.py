@@ -123,9 +123,10 @@ class Comfyui(App):
                                  "surrealist lpips numba einops")
         
         if install_extension == "v1":
-            self.execute_command(f"featurize dataset extract bf2877db-408d-4a3f-856d-3d718c027b27 ./ComfyUI/custom_nodes/")
-            self.execute_command(f"mv ./ComfyUI/custom_nodes/comfyui-extensions-collection/* ./ComfyUI/custom_nodes/")
-            self.execute_command(f"rm -rf ./ComfyUI/custom_nodes/comfyui-extensions-collection")
+            pass
+            # self.execute_command(f"featurize dataset extract bf2877db-408d-4a3f-856d-3d718c027b27 ./ComfyUI/custom_nodes/")
+            # self.execute_command(f"mv ./ComfyUI/custom_nodes/comfyui-extensions-collection/* ./ComfyUI/custom_nodes/")
+            # self.execute_command(f"rm -rf ./ComfyUI/custom_nodes/comfyui-extensions-collection")
 
         # 通常在安装过程中都会运行大量的 bash 命令，强烈建议使用 `self.execute_command` 来运行
         # 更稳妥的办法这里可能最好先创建一个虚拟环境，或者可以做得更好，把是否创建虚拟环境加到配置项
@@ -135,9 +136,9 @@ class Comfyui(App):
         # self.execute_command("{command to be executed}")
 
         # 因为起应用还会根据安装的扩展来安装其他的包，所以这里直接启动应用，等端口通了之后，Kill 应用，再通知前端启动成功
-        self.execute_command(f"python main.py --listen 127.0.0.1 --port {self.port}", "ComfyUI", daemon=True)
-        wait_for_port(self.port)
-        self.close()
+        # self.execute_command(f"python main.py --listen 127.0.0.1 --port {self.port}", "ComfyUI", daemon=True)
+        # wait_for_port(self.port)
+        # self.close()
 
         # 调用 app_installed，标准流程，该函数会通知前端安装已经完成，切换到应用的页面
         self.app_installed()

@@ -116,17 +116,25 @@ class Comfyui(App):
     
         with self.conda_activate(self.env_name):
             self.execute_command("git clone https://github.com/comfyanonymous/ComfyUI")
-            self.execute_command("pip install -r requirements.txt", "ComfyUI")
-            self.execute_command("pip install facexlib opencv-python timm accelerate "
+            self.execute_command("pip install --no-cache-dir -r requirements.txt", "ComfyUI")
+            self.execute_command("pip install --no-cache-dir facexlib opencv-python timm accelerate "
                                  "deepdiff matplotlib google diffusers omegaconf supervision "
                                  "numexpr blend-modes bitsandbytes vtracer rembg openai "
                                  "surrealist lpips numba einops")
         
         if install_extension == "v1":
-            pass
-            # self.execute_command(f"featurize dataset extract bf2877db-408d-4a3f-856d-3d718c027b27 ./ComfyUI/custom_nodes/")
-            # self.execute_command(f"mv ./ComfyUI/custom_nodes/comfyui-extensions-collection/* ./ComfyUI/custom_nodes/")
-            # self.execute_command(f"rm -rf ./ComfyUI/custom_nodes/comfyui-extensions-collection")
+            self.execute_command(f"git clone https://github.com/rgthree/rgthree-comfy.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/AIrjen/OneButtonPrompt", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/ltdrdata/ComfyUI-Inspire-Pack", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/ltdrdata/ComfyUI-Manager.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/yolain/ComfyUI-Easy-Use.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/Fannovel16/comfyui_controlnet_aux.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone https://github.com/11cafe/comfyui-workspace-manager.git", "./ComfyUI/custom_nodes/")
 
         # 通常在安装过程中都会运行大量的 bash 命令，强烈建议使用 `self.execute_command` 来运行
         # 更稳妥的办法这里可能最好先创建一个虚拟环境，或者可以做得更好，把是否创建虚拟环境加到配置项
@@ -157,6 +165,8 @@ class Comfyui(App):
 当前 ComfyUI 被安装在 {os.path.join(self.cfg.install_location, "ComfyUI")} 中，你可以使用下方的「文件」应用访问这个目录手动管理文件。
 
 如果使用遇到问题，请及时关注公众号后向我们反馈：https://docs.featurize.cn 中可扫码联系我们。
+
+<span style="color: #ef4444">首次启动 ComfyUI 因为需要安装扩展的依赖，比较耗时，请耐心等待。</span>
 """
             )
             mount_models = gr.Dropdown(
@@ -202,6 +212,7 @@ class Comfyui(App):
             self.execute_command(f"python main.py --listen 0.0.0.0 --port {self.port}", "ComfyUI", daemon=True)
 
         # 调用 app_started，标准流程，该函数会通知前端应用已经开始运行
+        wait_for_port(self.port)
         self.app_started()
 
     def close(self):

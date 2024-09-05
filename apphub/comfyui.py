@@ -54,7 +54,7 @@ class Comfyui(App):
             gr.Markdown(
                 """# 安装 ComfyUI
 
-若选择安装在云盘，并且安装所有插件，大约需要 8GB 空间，整个安装过程大概持续 10 分钟。
+若选择安装在云盘，并且安装所有插件，大约需要 8GB 空间，整个安装过程大概持续 10 ~ 20 分钟（根据网络情况波动）。
 
 如果安装在云盘，退还实例后下次无需重复安装。
 
@@ -124,17 +124,43 @@ class Comfyui(App):
         
         if install_extension == "v1":
             self.execute_command(f"git clone https://github.com/rgthree/rgthree-comfy.git", "./ComfyUI/custom_nodes/")
+            (Path(self.cfg.install_location) / "ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json").write_text("""{
+  "features": {
+    "group_header_fast_toggle": {
+      "enabled": false
+    },
+    "import_individual_nodes": {
+      "enabled": false
+    },
+    "menu_auto_nest": {
+      "subdirs": false
+    },
+    "progress_bar": {
+      "position": "bottom"
+    }
+  }
+}
+""")
             self.execute_command(f"git clone https://github.com/AIrjen/OneButtonPrompt", "./ComfyUI/custom_nodes/")
             self.execute_command(f"git clone https://github.com/ltdrdata/ComfyUI-Inspire-Pack", "./ComfyUI/custom_nodes/")
             self.execute_command(f"git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git", "./ComfyUI/custom_nodes/")
             self.execute_command(f"git clone https://github.com/ltdrdata/ComfyUI-Manager.git", "./ComfyUI/custom_nodes/")
+
             self.execute_command(f"git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"wget https://gist.githubusercontent.com/pythongosssss/1d3efa6050356a08cea975183088159a/raw/a18fb2f94f9156cf4476b0c24a09544d6c0baec6/danbooru-tags.txt -O ./ComfyUI/custom_nodes/ComfyUI-Custom-Scripts/user/autocomplete.txt")
+
             self.execute_command(f"git clone https://github.com/yolain/ComfyUI-Easy-Use.git", "./ComfyUI/custom_nodes/")
             self.execute_command(f"git clone https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git", "./ComfyUI/custom_nodes/")
             self.execute_command(f"git clone https://github.com/Fannovel16/comfyui_controlnet_aux.git", "./ComfyUI/custom_nodes/")
             self.execute_command(f"git clone https://github.com/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION.git", "./ComfyUI/custom_nodes/")
             self.execute_command(f"git clone https://github.com/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION.git", "./ComfyUI/custom_nodes/")
             self.execute_command(f"git clone https://github.com/11cafe/comfyui-workspace-manager.git", "./ComfyUI/custom_nodes/")
+
+        (Path(self.cfg.install_location) / "ComfyUI/user/default/comfy.settings.json").write_text("""{
+    "AGL.Locale": "zh-CN",
+    "Comfy.NodeSearchBoxImpl": "litegraph (legacy)"
+}
+""")
 
         # 通常在安装过程中都会运行大量的 bash 命令，强烈建议使用 `self.execute_command` 来运行
         # 更稳妥的办法这里可能最好先创建一个虚拟环境，或者可以做得更好，把是否创建虚拟环境加到配置项

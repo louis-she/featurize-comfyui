@@ -154,6 +154,7 @@ class Comfyui(App):
 
             self.execute_command(f"wget https://gist.githubusercontent.com/pythongosssss/1d3efa6050356a08cea975183088159a/raw/a18fb2f94f9156cf4476b0c24a09544d6c0baec6/danbooru-tags.txt -O ./ComfyUI/custom_nodes/ComfyUI-Custom-Scripts/user/autocomplete.txt")
 
+        self.execute_command(f"mkdir -p ./ComfyUI/user/default/")
         (Path(self.cfg.install_location) / "ComfyUI/user/default/comfy.settings.json").write_text("""{
     "AGL.Locale": "zh-CN",
     "Comfy.NodeSearchBoxImpl": "litegraph (legacy)"

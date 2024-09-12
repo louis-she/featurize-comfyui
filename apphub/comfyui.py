@@ -115,7 +115,7 @@ class Comfyui(App):
             self.execute_command(f"conda create -y --prefix /home/featurize/work/app/{self.key}/env python=3.11")
     
         with self.conda_activate(self.env_name):
-            self.execute_command("git clone https://github.com/comfyanonymous/ComfyUI")
+            self.execute_command("git clone git://172.16.0.219/comfyanonymous/ComfyUI")
             self.execute_command("pip install --no-cache-dir -r requirements.txt", "ComfyUI")
             self.execute_command("pip install --no-cache-dir facexlib opencv-python timm accelerate "
                                  "deepdiff matplotlib google diffusers omegaconf supervision "
@@ -123,7 +123,7 @@ class Comfyui(App):
                                  "surrealist lpips numba einops")
         
         if install_extension == "v1":
-            self.execute_command(f"git clone https://github.com/rgthree/rgthree-comfy.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/rgthree/rgthree-comfy", "./ComfyUI/custom_nodes/")
             (Path(self.cfg.install_location) / "ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json").write_text("""{
   "features": {
     "group_header_fast_toggle": {
@@ -141,20 +141,18 @@ class Comfyui(App):
   }
 }
 """)
-            self.execute_command(f"git clone https://github.com/AIrjen/OneButtonPrompt", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone https://github.com/ltdrdata/ComfyUI-Inspire-Pack", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone https://github.com/ltdrdata/ComfyUI-Manager.git", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/AIrjen/OneButtonPrompt", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/ltdrdata/ComfyUI-Inspire-Pack", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/ltdrdata/ComfyUI-Impact-Pack", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/ltdrdata/ComfyUI-Manager", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/pythongosssss/ComfyUI-Custom-Scripts", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/yolain/ComfyUI-Easy-Use", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/AlekPet/ComfyUI_Custom_Nodes_AlekPet", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/Fannovel16/comfyui_controlnet_aux", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION", "./ComfyUI/custom_nodes/")
+            self.execute_command(f"git clone git://172.16.0.219/11cafe/comfyui-workspace-manager.git", "./ComfyUI/custom_nodes/")
 
-            self.execute_command(f"git clone https://github.com/pythongosssss/ComfyUI-Custom-Scripts", "./ComfyUI/custom_nodes/")
             self.execute_command(f"wget https://gist.githubusercontent.com/pythongosssss/1d3efa6050356a08cea975183088159a/raw/a18fb2f94f9156cf4476b0c24a09544d6c0baec6/danbooru-tags.txt -O ./ComfyUI/custom_nodes/ComfyUI-Custom-Scripts/user/autocomplete.txt")
-
-            self.execute_command(f"git clone https://github.com/yolain/ComfyUI-Easy-Use.git", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone https://github.com/Fannovel16/comfyui_controlnet_aux.git", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone https://github.com/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION.git", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone https://github.com/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION.git", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone https://github.com/11cafe/comfyui-workspace-manager.git", "./ComfyUI/custom_nodes/")
 
         (Path(self.cfg.install_location) / "ComfyUI/user/default/comfy.settings.json").write_text("""{
     "AGL.Locale": "zh-CN",

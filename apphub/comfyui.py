@@ -173,6 +173,7 @@ class Comfyui(App):
         # self.close()
 
         # 调用 app_installed，标准流程，该函数会通知前端安装已经完成，切换到应用的页面
+        self.logger.info("✅ 安装已完成，如果页面未跳转，请手动刷新该页面。")
         self.app_installed()
 
     @property
@@ -237,6 +238,7 @@ class Comfyui(App):
 
         # 调用 app_started，标准流程，该函数会通知前端应用已经开始运行
         wait_for_port(self.port)
+        self.logger.info("✅ 程序已启动，如果页面未跳转，请手动刷新该页面。")
         self.app_started()
 
     def close(self):

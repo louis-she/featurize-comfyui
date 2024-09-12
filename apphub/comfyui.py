@@ -219,7 +219,7 @@ class Comfyui(App):
         if mount_models != "bare":
             Path("/home/featurize/.public/comfyui").mkdir(parents=True, exist_ok=True)
             self.execute_command(
-                f"sudo mount -t nfs -o ro,acregmin=600,acregmax=3600,rsize=1048576,wsize=1048576,noatime,tcp 172.16.0.227:/featurize-public/comfyui/assets_{mount_models} /home/featurize/.public/comfyui"
+                f"sudo mount -t nfs -o ro,defaults,soft,nolock,vers=3 172.16.0.227:/featurize-public/comfyui/assets_{mount_models} /home/featurize/.public/comfyui"
             )
             model_path = "/home/featurize/.public/comfyui/models/"
             for model_type in os.listdir(model_path):

@@ -117,7 +117,7 @@ class Comfyui(App):
         with self.conda_activate(self.env_name):
             self.execute_command("git clone git://172.16.0.219/comfyanonymous/ComfyUI")
             self.execute_command("pip install --no-cache-dir -r requirements.txt", "ComfyUI")
-            self.execute_command("pip install --no-cache-dir facexlib opencv-python timm accelerate "
+            self.execute_command("pip install --no-cache-dir facexlib opencv-python timm accelerate httpx[socks] "
                                  "deepdiff matplotlib google diffusers omegaconf supervision "
                                  "numexpr blend-modes bitsandbytes vtracer rembg openai "
                                  "surrealist lpips numba einops")
@@ -204,11 +204,15 @@ class Comfyui(App):
                     ("不挂载", "bare"),
                 ]
             )
-            button = self.render_start_button(inputs=[mount_models])
+
+            launch_option = gr.Textbox(
+                label="启动项", info="设置 ComfyUI 的启动项，一般无需设置，注意，请不要设置 --listen 和 --port 两个选项，否则会导致应用无法打开。", value=""
+            )
+            button = self.render_start_button(inputs=[mount_models, launch_option])
             self.render_log()
         return demo
 
-    def start(self, mount_models):
+    def start(self, mount_models, launch_option=""):
         """安装完成后，应用并不会立即开始运行，而是调用这个 start 函数。"""
 
         # 跟安装逻辑一样，start 里一般来说也是使用 execute_command 来启用应用
@@ -235,7 +239,7 @@ class Comfyui(App):
                             os.symlink(src, target)
 
         with self.conda_activate(self.env_name):
-            self.execute_command(f"python main.py --listen 0.0.0.0 --port {self.port}", "ComfyUI", daemon=True)
+            self.execute_command(f"python main.py --listen 0.0.0.0 --port {self.port} {launch_option}", "ComfyUI", daemon=True)
 
         # 调用 app_started，标准流程，该函数会通知前端应用已经开始运行
         wait_for_port(self.port)

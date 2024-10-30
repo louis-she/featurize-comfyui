@@ -91,6 +91,7 @@ class Comfyui(App):
                 choices=[
                     ("纯净版（仅 comfyui 本身）", "bare"),
                     ("常用插件", "v1"),
+                    ("楚门的AI世界推荐插件", "chumen_v1")
                 ]
             )
 
@@ -101,6 +102,37 @@ class Comfyui(App):
             # 渲染日志组件，将安装过程展示给用户
             self.render_log()
         return demo
+
+    def install_default_extensions(self):
+        self.execute_command(f"git clone git://172.16.0.219/rgthree/rgthree-comfy", "./ComfyUI/custom_nodes/")
+        (Path(self.cfg.install_location) / "ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json").write_text("""{
+  "features": {
+    "group_header_fast_toggle": {
+      "enabled": false
+    },
+    "import_individual_nodes": {
+      "enabled": false
+    },
+    "menu_auto_nest": {
+      "subdirs": false
+    },
+    "progress_bar": {
+      "position": "bottom"
+    }
+  }
+}
+""")
+        self.execute_command(f"git clone git://172.16.0.219/AIrjen/OneButtonPrompt", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"git clone git://172.16.0.219/ltdrdata/ComfyUI-Inspire-Pack", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"git clone git://172.16.0.219/ltdrdata/ComfyUI-Impact-Pack", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"git clone git://172.16.0.219/ltdrdata/ComfyUI-Manager", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"git clone git://172.16.0.219/pythongosssss/ComfyUI-Custom-Scripts", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"git clone git://172.16.0.219/yolain/ComfyUI-Easy-Use", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"git clone git://172.16.0.219/AlekPet/ComfyUI_Custom_Nodes_AlekPet", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"git clone git://172.16.0.219/Fannovel16/comfyui_controlnet_aux", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"git clone git://172.16.0.219/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"git clone git://172.16.0.219/11cafe/comfyui-workspace-manager.git", "./ComfyUI/custom_nodes/")
+        self.execute_command(f"wget https://gist.githubusercontent.com/pythongosssss/1d3efa6050356a08cea975183088159a/raw/a18fb2f94f9156cf4476b0c24a09544d6c0baec6/danbooru-tags.txt -O ./ComfyUI/custom_nodes/ComfyUI-Custom-Scripts/user/autocomplete.txt")
 
     def installation(self, install_location, install_extension):
         """该函数会在用户点击安装按钮后被触发（前提是用了 self.render_isntallation_button，开
@@ -123,36 +155,19 @@ class Comfyui(App):
                                  "surrealist lpips numba einops")
         
         if install_extension == "v1":
-            self.execute_command(f"git clone git://172.16.0.219/rgthree/rgthree-comfy", "./ComfyUI/custom_nodes/")
-            (Path(self.cfg.install_location) / "ComfyUI/custom_nodes/rgthree-comfy/rgthree_config.json").write_text("""{
-  "features": {
-    "group_header_fast_toggle": {
-      "enabled": false
-    },
-    "import_individual_nodes": {
-      "enabled": false
-    },
-    "menu_auto_nest": {
-      "subdirs": false
-    },
-    "progress_bar": {
-      "position": "bottom"
-    }
-  }
-}
-""")
-            self.execute_command(f"git clone git://172.16.0.219/AIrjen/OneButtonPrompt", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone git://172.16.0.219/ltdrdata/ComfyUI-Inspire-Pack", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone git://172.16.0.219/ltdrdata/ComfyUI-Impact-Pack", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone git://172.16.0.219/ltdrdata/ComfyUI-Manager", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone git://172.16.0.219/pythongosssss/ComfyUI-Custom-Scripts", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone git://172.16.0.219/yolain/ComfyUI-Easy-Use", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone git://172.16.0.219/AlekPet/ComfyUI_Custom_Nodes_AlekPet", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone git://172.16.0.219/Fannovel16/comfyui_controlnet_aux", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone git://172.16.0.219/AIGODLIKE/AIGODLIKE-COMFYUI-TRANSLATION", "./ComfyUI/custom_nodes/")
-            self.execute_command(f"git clone git://172.16.0.219/11cafe/comfyui-workspace-manager.git", "./ComfyUI/custom_nodes/")
+            self.install_default_extensions()
 
-            self.execute_command(f"wget https://gist.githubusercontent.com/pythongosssss/1d3efa6050356a08cea975183088159a/raw/a18fb2f94f9156cf4476b0c24a09544d6c0baec6/danbooru-tags.txt -O ./ComfyUI/custom_nodes/ComfyUI-Custom-Scripts/user/autocomplete.txt")
+        if install_extension == "chumen_v1":
+            self.install_default_extensions()
+            self.execute_command("git clone git://172.16.0.219/crystian/ComfyUI-Crystools", "./ComfyUI/custom_nodes/")
+            self.execute_command("git clone git://172.16.0.219/adigayung/ComfyUI-Translator", "./ComfyUI/custom_nodes/")
+            self.execute_command("git clone git://172.16.0.219/kijai/ComfyUI-KJNodes", "./ComfyUI/custom_nodes/")
+            self.execute_command("git clone git://172.16.0.219/kijai/ComfyUI-PyramidFlowWrapper", "./ComfyUI/custom_nodes/")
+            self.execute_command("git clone git://172.16.0.219/kijai/ComfyUI-CogVideoXWrapper", "./ComfyUI/custom_nodes/")
+            self.execute_command("git clone git://172.16.0.219/shadowcz007/comfyui-mixlab-nodes", "./ComfyUI/custom_nodes/")
+            with self.conda_activate(self.env_name):
+                self.execute_command("pip install --no-cache-dir pyOpenSSL langdetect pynvml watchdog")
+
 
         self.execute_command(f"mkdir -p ./ComfyUI/user/default/")
         (Path(self.cfg.install_location) / "ComfyUI/user/default/comfy.settings.json").write_text("""{
@@ -212,6 +227,20 @@ class Comfyui(App):
             self.render_log()
         return demo
 
+    def mount_default(self):
+        model_path = "/home/featurize/.public/comfyui/models/"
+        for model_type in os.listdir(model_path):
+            for file in os.listdir(f"{model_path}{model_type}"):
+                target = os.path.join(self.cfg.install_location, "ComfyUI/models", model_type, file)
+                if not os.path.exists(target):
+                    src = os.path.join(model_path, model_type, file)
+                    Path(target).parent.mkdir(parents=True, exist_ok=True)
+                    self.logger.info(f"link {src} to {target}")
+                    if os.path.isdir(src):
+                        os.symlink(src, target, target_is_directory=True)
+                    else:
+                        os.symlink(src, target)
+
     def start(self, mount_models, launch_option=""):
         """安装完成后，应用并不会立即开始运行，而是调用这个 start 函数。"""
 
@@ -223,20 +252,10 @@ class Comfyui(App):
         if mount_models != "bare":
             Path("/home/featurize/.public/comfyui").mkdir(parents=True, exist_ok=True)
             self.execute_command(
-                f"sudo mount -t nfs -o ro,defaults,soft,nolock,vers=3 172.16.0.227:/featurize-public/comfyui/assets_{mount_models} /home/featurize/.public/comfyui"
+                f"sudo mount -t nfs -o ro,defaults,soft,nolock,vers=3 172.16.0.227:/featurize-public/comfyui/assets_v1 /home/featurize/.public/comfyui"
             )
-            model_path = "/home/featurize/.public/comfyui/models/"
-            for model_type in os.listdir(model_path):
-                for file in os.listdir(f"{model_path}{model_type}"):
-                    target = os.path.join(self.cfg.install_location, "ComfyUI/models", model_type, file)
-                    if not os.path.exists(target):
-                        src = os.path.join(model_path, model_type, file)
-                        Path(target).parent.mkdir(parents=True, exist_ok=True)
-                        self.logger.info(f"link {src} to {target}")
-                        if os.path.isdir(src):
-                            os.symlink(src, target, target_is_directory=True)
-                        else:
-                            os.symlink(src, target)
+        if mount_models == "v1":
+            self.mount_default()
 
         with self.conda_activate(self.env_name):
             self.execute_command(f"python main.py --listen 0.0.0.0 --port {self.port} {launch_option}", "ComfyUI", daemon=True)

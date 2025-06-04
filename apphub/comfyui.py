@@ -147,7 +147,7 @@ class Comfyui(App):
             self.execute_command(f"conda create -y --prefix /home/featurize/work/app/{self.key}/env python=3.11")
     
         with self.conda_activate(self.env_name):
-            self.execute_command("git clone git://172.16.0.219/comfyanonymous/ComfyUI")
+            self.execute_command("git clone -b v0.2.7 git://172.16.0.219/comfyanonymous/ComfyUI")
             self.execute_command("pip install --no-cache-dir -r requirements.txt", "ComfyUI")
             self.execute_command("pip install --no-cache-dir facexlib opencv-python timm accelerate httpx[socks] "
                                  "deepdiff matplotlib google diffusers omegaconf supervision "

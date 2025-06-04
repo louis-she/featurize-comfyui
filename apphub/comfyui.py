@@ -152,7 +152,7 @@ class Comfyui(App):
             self.execute_command("pip install --no-cache-dir facexlib opencv-python timm accelerate httpx[socks] "
                                  "deepdiff matplotlib google diffusers omegaconf supervision "
                                  "numexpr blend-modes bitsandbytes vtracer rembg openai "
-                                 "surrealist lpips numba einops")
+                                 "surrealist lpips numba einops transformers")
         
         if install_extension == "v1":
             self.install_default_extensions()
